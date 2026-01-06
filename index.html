@@ -273,7 +273,8 @@ function startGame() {
         score: start,
         totalPoints: 0,
         rounds: 0,
-        avg: 0
+        avg: 0,
+        turnPoints: 0
     }));
 
     setup.style.display = "none";
@@ -337,13 +338,20 @@ function throwDart(value) {
 
     let player = players[current];
     let points = value * multiplier;
+    player.turnPoints += points;
     let newScore = player.score - points;
     dartsLeft--;
 
-    // Bust + Double-Out
     if (newScore < 0 || newScore === 1 || (newScore === 0 && multiplier !== 2)) {
         log(`❌ ${player.name} Bust`);
+
+        // Bust-Runde zählt mit 0 Punkten
+        player.turnPoints = 0;
+        player.rounds++;
+        player.avg = (player.totalPoints / player.rounds).toFixed(2);
+
         endTurn();
+        renderPlayers();
         saveState();
         return;
     }
@@ -359,9 +367,11 @@ function throwDart(value) {
     }
 
     if (dartsLeft === 0) { 
-        player.totalPoints += points;
-        player.rounds += 1;
-        player.avg = (player.totalPoints / player.rounds).toFixed(2);   
+        player.totalPoints += player.turnPoints;
+        player.rounds++;
+        player.avg = (player.totalPoints / player.rounds).toFixed(2);
+
+        player.turnPoints = 0; // reset für nächste Runde
         endTurn();
     }
 
