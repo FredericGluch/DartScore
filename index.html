@@ -21,7 +21,7 @@ h1, h2 {
     text-align: center;
 }
 .header {
-    margin-top: none;
+    margin-top: 0;
 }
 button {
     padding: 0.7rem;
@@ -82,16 +82,14 @@ button {
     padding: 2px;
     height: 40px;
 }
-.double:focus {
-    background: #ff990095;
+.double:focus, 
+.triple:focus {
+    border: 3px solid #fff;
 }
 .triple { 
     background: #f44336;
     padding: 2px;
     height: 40px;
-}
-.triple:focus {
-    background: #f4433696;
 }
 .board {
     display: grid;
@@ -409,7 +407,7 @@ function undo() {
 
     document.getElementById("history").innerHTML = last.historyHTML;
 
-    renderPlayers();     // 🔥 WICHTIG
+    renderPlayers();
     updateRound();
     saveState();
 }
