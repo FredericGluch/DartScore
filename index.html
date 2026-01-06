@@ -20,6 +20,9 @@ body {
 h1, h2 {
     text-align: center;
 }
+.header {
+    margin-top: none;
+}
 button {
     padding: 0.7rem;
     border: none;
@@ -63,10 +66,16 @@ button {
 .multipliers {
     display: flex;
     gap: 0.5rem;
-    margin: 1rem 0;
+    margin: .5rem 0;
 }
 .multipliers button {
     flex: 1;
+}
+.gameBtnContainer {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 .double {
     background: #ff9900;
@@ -159,7 +168,7 @@ button {
 <body>
 
 <div class="app">
-    <h1 id="header">🎯 Dart Score</h1>
+    <h1 id="header" class="header">🎯 Dart Score</h1>
 
 <div class="setup" id="setup">
     <div class="setup-row">
@@ -188,16 +197,18 @@ button {
             <button class="triple" onclick="setMulti(3)">Triple</button>
         </div>
 
-        <button onclick="undo()" style="width:100%; margin-bottom:0.5rem; background:#607d8b; color:#fff;">
-            ↩ Undo
+        <button onclick="undo()" disabled style="width:100%; margin-bottom:0.5rem; background:#607d8b; color:#fff;">
+            ↩ Undo (disabled)
         </button>
 
-        <!-- Neues Spiel Button -->
-        <button onclick="newGame()" style="width:100%; margin-bottom:1rem; background:#2196f3; color:#fff;">
-            🆕 Neues Spiel
-        </button>
+     
 
         <div class="board" id="board"></div>
+
+           <div class="gameBtnContainer">
+            <button onclick="newGame()" style="width:100%; margin-bottom:0.5rem; background:hsla(124, 90%, 54%, 0.843); color:#fff;">Neues Spiel</button>
+            <button onclick="startGame()" style="width:100%; margin-bottom:0.5rem; background:#2191f3; color:#fff;">Restart</button>
+        </div>
 
         <div class="history" id="history"></div>
     </div>
@@ -370,9 +381,7 @@ function endTurn() {
 }
 
 function updateRound() {
-    document.getElementById("turnInfo").textContent =
-        `Round: ${players[current].rounds}`;
-    renderPlayers();
+    document.getElementById("turnInfo").textContent = `Round: ${players[current].rounds + 1}`;
 }
 
 function log(text) {
