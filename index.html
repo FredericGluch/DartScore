@@ -197,11 +197,7 @@ button {
             <button class="triple" onclick="setMulti(3)">Triple</button>
         </div>
 
-        <button onclick="undo()" disabled style="width:100%; margin-bottom:0.5rem; background:#607d8b; color:#fff;">
-            ↩ Undo (disabled)
-        </button>
-
-     
+        <button onclick="undo()" style="width:100%; margin-bottom:0.5rem; background:#607d8b; color:#fff;">↩ Undo</button>
 
         <div class="board" id="board"></div>
 
@@ -359,6 +355,7 @@ function throwDart(value) {
         alert(`🏆 ${player.name} gewinnt!`);
         localStorage.removeItem('dartGameState');
         location.reload();
+        startGame();
     }
 
     if (dartsLeft === 0) { 
@@ -399,11 +396,14 @@ function undo() {
     current = last.current;
     dartsLeft = last.dartsLeft;
     multiplier = last.multiplier;
+
     document.getElementById("history").innerHTML = last.historyHTML;
 
+    renderPlayers();     // 🔥 WICHTIG
     updateRound();
     saveState();
 }
+
 
 // --- Neues Spiel Funktion ---
 function newGame() {
