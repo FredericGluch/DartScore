@@ -81,6 +81,8 @@ button {
     background: #ff9900;
     padding: 2px;
     height: 40px;
+    color: #000;
+    font-weight: 700;
 }
 .double:focus, 
 .triple:focus {
@@ -90,6 +92,8 @@ button {
     background: #f44336;
     padding: 2px;
     height: 40px;
+    color: #000;
+    font-weight: 700;
 }
 .board {
     display: grid;
@@ -157,8 +161,15 @@ button {
     transition: background 0.2s;
 }
 
-.start-btn:hover {
-    background: #45a049;
+.setup-startscore {
+    display: flex;
+    gap: .5rem;
+
+    button {
+        background: rgb(58, 58, 58);
+        color: #fff;
+        width: 100%;
+    }
 }
 
 </style>
@@ -170,15 +181,19 @@ button {
 
 <div class="setup" id="setup">
     <div class="setup-row">
-        <label for="playerCount">Anzahl Spieler:</label>
+        <label for="playerCount">How many are playing?</label>
         <input type="number" id="playerCount" min="1" value="2">
     </div>
     <div class="setup-row">
-        <label for="startScore">Startscore:</label>
-        <input type="number" id="startScore" value="501">
+        <label for="startScore">Choose startscore:</label>
+        <div class="setup-startscore">
+            <button onclick="startGame(501)">501</button>
+            <button onclick="startGame(301)">301</button>
+        </div>
     </div>
-    <button class="start-btn" onclick="startGame()">Quick Game</button>
-    <button class="start-btn" onclick="startTournament()">Start tournament</button>
+
+    <!-- HIIDEN -->
+    <button class="start-btn" style="display: none;" onclick="startTournament()">Start tournament</button>
 </div>
 
 <div class="tournament" id="tournament" style="display:none;">
@@ -199,9 +214,9 @@ button {
 
         <div class="board" id="board"></div>
 
-           <div class="gameBtnContainer">
+        <div class="gameBtnContainer">
             <button onclick="newGame()" style="width:100%; margin-bottom:0.5rem; background:hsla(124, 90%, 54%, 0.843); color:#fff;">Neues Spiel</button>
-            <button onclick="startGame()" style="width:100%; margin-bottom:0.5rem; background:#2191f3; color:#fff;">Restart</button>
+            <button onclick="restartGame()" style="width:100%; margin-bottom:0.5rem; background:#2191f3; color:#fff;">Restart</button>
         </div>
 
         <div class="history" id="history"></div>
@@ -215,6 +230,7 @@ let dartsLeft = 3;
 let multiplier = 1;
 let historyStack = [];
 let round = 1;
+let startScore = 0;
 
 // --- Local Storage Funktionen ---
 function saveState() {
@@ -225,7 +241,7 @@ function saveState() {
         multiplier,
         historyStack
     };
-    localStorage.setItem('dartGameState', JSON.stringify(state));
+   localStorage.setItem('dartGameState', JSON.stringify(state));
 }
 
 function startTournament() {
@@ -238,7 +254,6 @@ function changeName(index, newName) {
     if (!newName.trim()) return;
     players[index].name = newName.trim();
     saveState();
-    updateTurn();
 }
 
 function loadState() {
@@ -260,15 +275,29 @@ function loadState() {
     }
 }
 
+function restartGame() {
+    localStorage.removeItem('dartGameState');
+    historyStack = [];
+    players = [];
+    current = 0;
+    dartsLeft = 3;
+    multiplier = 1;
+
+    document.getElementById("history").innerHTML = "";
+
+    const startScore = JSON.parse(localStorage.getItem('startScore'));
+    startGame(startScore);
+}
+
 // --- Spielstart ---
-function startGame() {
+function startGame(score) {
+    localStorage.setItem("startScore", JSON.stringify(score));
     const count = parseInt(playerCount.value);
-    const start = parseInt(startScore.value);
-    if (count < 1 || start < 1) return;
+    if (count < 1 || score < 1) return;
 
     players = Array.from({ length: count }, (_, i) => ({
-        name: "Spieler " + (i + 1),
-        score: start,
+        name: "",
+        score: score,
         totalPoints: 0,
         rounds: 0,
         avg: 0,
@@ -297,6 +326,7 @@ function renderPlayers() {
         playersDiv.innerHTML += `
             <div class="player ${i === current ? "active" : ""}">
                 <input 
+                    placeholder="Click here to enter a name"
                     class="player-name"
                     value="${p.name}"
                     onchange="changeName(${i}, this.value)"
@@ -307,6 +337,16 @@ function renderPlayers() {
     });
 }
 
+function calculatePoints(hit, multiplier) {
+    if (hit === "MISS") return 0;
+    if (hit === "BULL") return 25;
+    if (hit === "BULLSEYE") return 50;
+
+    // Normal numbers (1–20)
+    return hit * multiplier;
+}
+
+
 function renderBoard() {
     const board = document.getElementById("board");
     board.innerHTML = "";
@@ -314,9 +354,9 @@ function renderBoard() {
         board.innerHTML += `<button onclick="throwDart(${i})">${i}</button>`;
     }
     board.innerHTML += `
-        <button onclick="throwDart(25)">Bull</button>
-        <button onclick="throwDart(50)">Bullseye</button>
-        <button onclick="throwDart(0)">Miss</button>`;
+        <button onclick="throwDart('BULL')">Bull</button>
+        <button onclick="throwDart('BULLSEYE')">Bullseye</button>
+        <button onclick="throwDart('MISS')">Miss</button>`;
 }
 
 function setMulti(m) {
@@ -324,7 +364,7 @@ function setMulti(m) {
     saveState();
 }
 
-function throwDart(value) {
+function throwDart(hit) {
     // Vorherigen Zustand speichern
     historyStack.push({
         players: JSON.parse(JSON.stringify(players)),
@@ -335,15 +375,18 @@ function throwDart(value) {
     });
 
     let player = players[current];
-    let points = value * multiplier;
-    player.turnPoints += points;
-    let newScore = player.score - points;
-    dartsLeft--;
+    const points = calculatePoints(hit, multiplier);
 
-    if (newScore < 0 || newScore === 1 || (newScore === 0 && multiplier !== 2)) {
+    dartsLeft--;
+    player.turnPoints += points;
+    
+    const isDoubleFinish = (multiplier === 2 && typeof hit === "number") || hit === "BULLSEYE";
+    const newScore = player.score - points;
+    
+    
+    if (newScore < 0 || newScore === 1 || (newScore === 0 && !isDoubleFinish)) {
         log(`❌ ${player.name} Bust`);
 
-        // Bust-Runde zählt mit 0 Punkten
         player.turnPoints = 0;
         player.rounds++;
         player.avg = (player.totalPoints / player.rounds).toFixed(2);
@@ -359,9 +402,9 @@ function throwDart(value) {
 
     if (newScore === 0) {
         alert(`🏆 ${player.name} gewinnt!`);
-        localStorage.removeItem('dartGameState');
-        location.reload();
-        startGame();
+        //localStorage.removeItem('dartGameState');
+        //location.reload();
+        //startGame();
     }
 
     if (dartsLeft === 0) { 
@@ -415,8 +458,6 @@ function undo() {
 
 // --- Neues Spiel Funktion ---
 function newGame() {
-    if (!confirm("Willst du wirklich ein neues Spiel starten? Der aktuelle Spielstand geht verloren.")) return;
-
     localStorage.removeItem('dartGameState');
     historyStack = [];
     players = [];
@@ -424,7 +465,7 @@ function newGame() {
     dartsLeft = 3;
     multiplier = 1;
 
-    setup.style.display = "block";
+    setup.style.display = "flex";
     game.style.display = "none";
     document.getElementById("players").innerHTML = "";
     document.getElementById("board").innerHTML = "";
