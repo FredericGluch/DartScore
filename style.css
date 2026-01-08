@@ -1,0 +1,327 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+}
+.app {
+    max-width: 480px;
+    margin: auto;
+    padding: 1rem;
+}
+h1, h2 {
+    text-align: center;
+}
+.header {
+    margin-top: 0;
+}
+button {
+    padding: 0.7rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.players {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.player {
+    background: #222;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.player-name {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+}
+.player-name:focus {
+    background: #333;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+.player.active {
+    border: 2px solid #0f0;
+}
+.player .score {
+    font-size: 1.2rem;
+    text-align: right;
+}
+.multipliers {
+    display: flex;
+    gap: 0.5rem;
+    margin: .5rem 0;
+}
+.multipliers button {
+    flex: 1;
+}
+.gameBtnContainer {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
+    button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        color: #fff;
+    }
+
+    .restart-game { background: #2191f3;}
+    .new-game { background: hsla(124, 71%, 41%, 0.843);}
+}
+.double {
+    background: #ff9900;
+    padding: 2px;
+    height: 40px;
+    color: #000;
+    font-weight: 700;
+}
+.double:focus, 
+.triple:focus {
+    border: 3px solid #fff;
+}
+.triple { 
+    background: #f44336;
+    padding: 2px;
+    height: 40px;
+    color: #000;
+    font-weight: 700;
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+}
+.board button {
+    background: #333;
+    color: #fff;
+}
+
+.setup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 1rem auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.setup-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.setup-row label {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.setup-row input {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #111;
+    color: #fff;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.start-btn {
+    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: #4caf50;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.setup-startscore {
+    display: flex;
+    gap: .5rem;
+
+    button {
+        background: rgb(58, 58, 58);
+        color: #fff;
+        width: 100%;
+    }
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+}
+.app {
+    max-width: 480px;
+    margin: auto;
+    padding: 1rem;
+}
+h1, h2 {
+    text-align: center;
+}
+.header {
+    margin-top: 0;
+}
+button {
+    padding: 0.7rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.players {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.player {
+    background: #222;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.player-name {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+}
+.player-name:focus {
+    background: #333;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+.player.active {
+    border: 2px solid #0f0;
+}
+.player .score {
+    font-size: 1.2rem;
+    text-align: right;
+}
+.multipliers {
+    display: flex;
+    gap: 0.5rem;
+    margin: .5rem 0;
+}
+.multipliers button {
+    flex: 1;
+}
+.gameBtnContainer {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+.double {
+    background: #ff9900;
+    padding: 2px;
+    height: 40px;
+    color: #000;
+    font-weight: 700;
+}
+.double:focus, 
+.triple:focus {
+    border: 3px solid #fff;
+}
+.triple { 
+    background: #f44336;
+    padding: 2px;
+    height: 40px;
+    color: #000;
+    font-weight: 700;
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+}
+.board button {
+    background: #333;
+    color: #fff;
+}
+.setup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 1rem auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+.setup-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.setup-row label {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.setup-row input {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #111;
+    color: #fff;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.start-btn {
+    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: #4caf50;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.undo-btn {
+    width:100%;
+    margin-bottom:0.5rem;
+    background:#607d8b;
+    color:#fff;
+}
+
+
+
+.setup-startscore {
+    display: flex;
+    gap: .5rem;
+
+    button {
+        background: rgb(58, 58, 58);
+        color: #fff;
+        width: 100%;
+    }
+}
