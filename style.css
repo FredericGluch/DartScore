@@ -276,6 +276,7 @@ button {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    margin-bottom: 1rem;
 }
 
 .setup-row label {
@@ -312,9 +313,6 @@ button {
     background:#607d8b;
     color:#fff;
 }
-
-
-
 .setup-startscore {
     display: flex;
     gap: .5rem;
