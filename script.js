@@ -65,6 +65,7 @@ function restartGame() {
 
 // --- Spielstart ---
 function startGame(score) {
+    checkout.style.display = "none";
     localStorage.setItem("startScore", JSON.stringify(score));
     const count = parseInt(playerCount.value);
     if (count < 1 || score < 1) return;
@@ -96,6 +97,12 @@ function renderPlayers() {
     const playersDiv = document.getElementById("players");
     playersDiv.innerHTML = "";
 
+    const currentPlayersScore = players[current].score;
+    if (currentPlayersScore <= 170) {
+        checkout.style.display = "block";
+        checkoutSuggestion(currentPlayersScore);
+    }
+
     players.forEach((p, i) => {
         playersDiv.innerHTML += `
             <div class="player ${i === current ? "active" : ""}">
@@ -119,7 +126,6 @@ function calculatePoints(hit, multiplier) {
     // Normal numbers (1–20)
     return hit * multiplier;
 }
-
 
 function renderBoard() {
     const board = document.getElementById("board");
@@ -156,7 +162,6 @@ function throwDart(hit) {
     
     const isDoubleFinish = (multiplier === 2 && typeof hit === "number") || hit === "BULLSEYE";
     const newScore = player.score - points;
-    
     
     if (newScore < 0 || newScore === 1 || (newScore === 0 && !isDoubleFinish)) {
         log(`❌ ${player.name} Bust`);
@@ -195,6 +200,15 @@ function throwDart(hit) {
     setMulti(1);
 }
 
+function checkoutSuggestion(score) {
+    fetch("checkout.json")
+        .then((res) => res.json())
+        .then((json) => {
+            updateRound(json[score])
+        })
+    .catch((e) => console.log(e))
+}
+
 function endTurn() {
     dartsLeft = 3;
     current = (current + 1) % players.length;
@@ -202,8 +216,13 @@ function endTurn() {
     saveState();
 }
 
-function updateRound() {
+function updateRound(suggestion) {
     document.getElementById("turnInfo").textContent = `Round: ${players[current].rounds + 1}`;
+    
+    if(suggestion) {
+        const suggestionFormatted = suggestion.toString().replaceAll(',',' → ');
+        document.getElementById("checkout").textContent = `${suggestionFormatted}`
+    }
 }
 
 function log(text) {
@@ -228,7 +247,6 @@ function undo() {
     updateRound();
     saveState();
 }
-
 
 // --- Neues Spiel Funktion ---
 function newGame() {
